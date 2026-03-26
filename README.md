@@ -1,6 +1,6 @@
 # Academik
 
-Aplicacion web responsive para control de asistencia escolar, pensada primero para celulares y operable tambien desde escritorio.
+Aplicación web responsive para gestión y control de asistencia escolar, desarrollada con Django 5, PostgreSQL, HTMX, Alpine.js, Tailwind CSS y soporte PWA..
 
 ## Estado inicial
 
