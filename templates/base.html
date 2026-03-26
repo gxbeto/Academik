@@ -1,0 +1,170 @@
+{% load static %}
+{% load pwa %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Academi-k{% endblock %}</title>
+  <meta name="description" content="Control de asistencia escolar para profesores y administracion.">
+  <script>
+    (() => {
+      const storedTheme = window.localStorage.getItem("academik-theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = storedTheme || (prefersDark ? "dark" : "light");
+      document.documentElement.classList.toggle("theme-dark", theme === "dark");
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
+  {% if pwa_enabled %}
+  {% progressive_web_app_meta %}
+  {% endif %}
+  <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+  <script defer src="{% static 'vendor/alpine.min.js' %}"></script>
+  <script src="{% static 'vendor/htmx.min.js' %}"></script>
+</head>
+
+<body hx-boost="true">
+  <div class="mx-auto min-h-screen max-w-7xl px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0 lg:px-8"
+    x-data="{
+      menuOpen: false,
+      theme: document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light',
+      applyTheme(nextTheme) {
+        this.theme = nextTheme;
+        document.documentElement.classList.toggle('theme-dark', nextTheme === 'dark');
+        document.documentElement.style.colorScheme = nextTheme;
+        window.localStorage.setItem('academik-theme', nextTheme);
+      },
+      toggleTheme() {
+        this.applyTheme(this.theme === 'dark' ? 'light' : 'dark');
+      }
+    }">
+    <header class="app-shell-header">
+      <div class="dynamic-island{% if not is_home_shell %} dynamic-island-compact{% endif %}">
+        <button class="icon-button dynamic-island-menu-button" type="button" @click="menuOpen = true"
+          aria-label="Abrir menu" title="Abrir menu">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M3.5 5.5h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M3.5 10h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M3.5 14.5h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <a class="dynamic-island-copy" href="{% url 'inicio' %}">
+          <span class="dynamic-island-app">{{ app_title|default:"Academi-k" }}</span>
+        </a>
+
+        <button class="dynamic-island-theme-toggle" type="button" @click="toggleTheme()"
+          :aria-label="theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'"
+          :title="theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'">
+          <svg x-cloak x-show="theme === 'light'" class="dynamic-island-theme-icon" viewBox="0 0 24 24" fill="none"
+            aria-hidden="true">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+            <path d="M12 2.75V5.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M12 18.75V21.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M21.25 12H18.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M5.25 12H2.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M18.54 5.46L16.77 7.23" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M7.23 16.77L5.46 18.54" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M18.54 18.54L16.77 16.77" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M7.23 7.23L5.46 5.46" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+          <svg x-cloak x-show="theme === 'dark'" class="dynamic-island-theme-icon" viewBox="0 0 24 24" fill="none"
+            aria-hidden="true">
+            <path
+              d="M20.25 14.25A8.25 8.25 0 0 1 9.75 3.75a8.25 8.25 0 1 0 10.5 10.5Z"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        {% if request.user.is_authenticated %}
+        <div class="dynamic-island-session">
+          <strong class="dynamic-island-app">{{ request.user.get_short_name }}</strong>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="session-exit-button session-exit-button-dark" type="submit" aria-label="Cerrar sesion"
+              title="Cerrar sesion">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M8 4H5.75A1.75 1.75 0 0 0 4 5.75v8.5C4 15.216 4.784 16 5.75 16H8" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path d="M15.5 10H8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Salir</span>
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <div class="shell-content">
+      <div class="fixed inset-0 z-30 bg-slate-950/35" x-cloak x-show="menuOpen" x-transition.opacity
+        @click="menuOpen = false"></div>
+
+      <aside class="panel mobile-sidebar p-4 sm:p-5" x-cloak
+        :class="menuOpen ? 'translate-x-0 opacity-100' : '-translate-x-[115%] opacity-0 pointer-events-none'"
+        aria-label="Menu lateral">
+        <div class="sidebar-drawer-header">
+          <div>
+            <p class="menu-section-title">Menu</p>
+            <strong class="sidebar-drawer-title">Navegacion</strong>
+          </div>
+          <button class="icon-button icon-button-soft" type="button" @click="menuOpen = false" aria-label="Cerrar menu"
+            title="Cerrar menu">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M5 5l10 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="mt-5 space-y-4">
+          {% for section in sidebar_sections %}
+          <section>
+            <p class="menu-section-title">{{ section.title }}</p>
+            <div class="mt-2 space-y-1.5">
+              {% for item in section.items %}
+              <a class="sidebar-link{% if item.active %} sidebar-link-active{% endif %}" href="{{ item.url }}"
+                @click="menuOpen = false" title="{{ item.description }}">
+                <span class="sidebar-link-label">{{ item.label }}</span>
+                <span class="sidebar-link-mark" aria-hidden="true"></span>
+              </a>
+              {% endfor %}
+            </div>
+          </section>
+          {% endfor %}
+        </nav>
+      </aside>
+
+      <main class="space-y-4">
+        {% if messages %}
+        <div class="space-y-3">
+          {% for message in messages %}
+          <div
+            class="rounded-3xl border px-5 py-4 {% if 'error' in message.tags %}border-red-200 bg-red-50{% elif 'success' in message.tags %}border-menta/40 bg-menta/10{% else %}border-slate-200 bg-slate-50{% endif %}">
+            <p
+              class="text-sm font-semibold uppercase tracking-[0.24em] {% if 'error' in message.tags %}text-red-700{% elif 'success' in message.tags %}text-rio{% else %}text-rio{% endif %}">
+              {% if 'error' in message.tags %}
+              Error
+              {% elif 'success' in message.tags %}
+              Confirmacion
+              {% else %}Aviso{% endif %}
+            </p>
+            <p
+              class="mt-2 text-sm leading-6 {% if 'error' in message.tags %}text-red-700{% else %}text-slate-700{% endif %}">
+              {{ message }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+</body>
+
+</html>

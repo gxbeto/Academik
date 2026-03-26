@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Academi-k | {{ form_title }}{% endblock %}
+
+{% block content %}
+  <section class="panel overflow-hidden">
+    <div class="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">{{ crud.section_title }}</p>
+        <h1 class="mt-3 text-4xl font-black tracking-tight text-tinta">{{ form_title }}</h1>
+        <p class="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+          {{ form_description }}
+        </p>
+      </div>
+
+      <a class="action-button action-button-secondary" href="{{ list_url }}">
+        Volver al listado
+      </a>
+    </div>
+  </section>
+
+  <section class="grid gap-4 {% if form_mode != 'create' %}xl:grid-cols-[1.05fr_0.95fr]{% endif %}">
+    <article class="panel">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">
+        {% if form_mode == "create" %}Carga de datos{% else %}Edicion{% endif %}
+      </p>
+      <h2 class="mt-2 text-2xl font-bold text-tinta">
+        {% if form_mode == "create" %}Completa la informacion{% else %}Actualiza la informacion{% endif %}
+      </h2>
+      <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+        {% if form_mode == "create" %}
+          Completa el formulario y guarda el registro cuando todo este listo.
+        {% else %}
+          Modifica los campos necesarios y guarda los cambios para actualizar el registro.
+        {% endif %}
+      </p>
+
+      <form class="mt-6 space-y-4" method="post" hx-boost="false">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm leading-6 text-red-700">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% for field in form %}
+          {% if field.field.widget.input_type == "checkbox" %}
+            <label class="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+              {{ field }}
+              <span class="block">
+                <span class="block text-sm font-semibold text-tinta">
+                  {{ field.label }}
+                  {% if field.field.widget.attrs.title %}
+                    <span class="tooltip-badge" title="{{ field.field.widget.attrs.title }}">?</span>
+                  {% endif %}
+                </span>
+                {% if field.help_text %}
+                  <span class="mt-1 block text-xs leading-5 text-slate-500">{{ field.help_text }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                  <span class="mt-1 block text-xs leading-5 text-red-600">{{ error }}</span>
+                {% endfor %}
+              </span>
+            </label>
+            {% else %}
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-rio" for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                  {% if field.field.widget.attrs.title %}
+                    <span class="tooltip-badge" title="{{ field.field.widget.attrs.title }}">?</span>
+                  {% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <p class="mt-2 text-xs leading-5 text-slate-500">{{ field.help_text }}</p>
+              {% endif %}
+              {% for error in field.errors %}
+                <p class="mt-2 text-xs leading-5 text-red-600">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <button class="action-button action-button-primary w-full justify-center" type="submit">
+          {{ submit_label }}
+        </button>
+        <p class="text-sm leading-6 text-slate-500">{{ submit_copy }}</p>
+      </form>
+    </article>
+
+    {% if form_mode != "create" %}
+      <article class="panel">
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Ayuda rapida</p>
+        <h2 class="mt-2 text-2xl font-bold text-tinta">Registro seleccionado</h2>
+        <div class="mt-5 grid gap-3 text-sm leading-6 text-slate-600 sm:text-base">
+          <p>Estas modificando el registro: <strong class="text-tinta">{{ record_label }}</strong>.</p>
+          <p>Guarda los cambios cuando termines para actualizar la informacion.</p>
+          <p>Si necesitas quitarlo, vuelve al listado y usa el boton Eliminar de esa fila.</p>
+        </div>
+      </article>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Academi-k | Importar {{ crud.title }}{% endblock %}
+
+{% block content %}
+  <section class="panel overflow-hidden">
+    <div class="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">{{ crud.section_title }}</p>
+        <h1 class="mt-3 text-4xl font-black tracking-tight text-tinta">Importar {{ crud.title }}</h1>
+        <p class="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+          Selecciona un archivo PDF, procesa la informacion y revisa el informe antes de aceptarla o descartarla.
+        </p>
+      </div>
+
+      <a class="action-button action-button-secondary" href="{{ list_url }}">
+        Volver al listado
+      </a>
+    </div>
+  </section>
+
+  <section class="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+    <article class="panel">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Archivo de entrada</p>
+      <h2 class="mt-2 text-2xl font-bold text-tinta">Procesar PDF</h2>
+      <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+        El sistema preparara los datos a importar y generara un informe con resultados y errores detectados.
+      </p>
+
+      <form class="mt-6 space-y-4" method="post" enctype="multipart/form-data" hx-boost="false">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="process">
+
+        {% if import_form.non_field_errors %}
+          <div class="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm leading-6 text-red-700">
+            {% for error in import_form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div>
+          <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-rio" for="{{ import_form.archivo.id_for_label }}">
+            {{ import_form.archivo.label }}
+          </label>
+          {{ import_form.archivo }}
+          {% for error in import_form.archivo.errors %}
+            <p class="mt-2 text-xs leading-5 text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <button class="action-button action-button-primary w-full justify-center" type="submit">
+          Procesar archivo
+        </button>
+      </form>
+    </article>
+
+    <article class="panel">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Programa de importacion</p>
+      <h2 class="mt-2 text-2xl font-bold text-tinta">Estructura preparada</h2>
+      <div class="mt-5 grid gap-3 text-sm leading-6 text-slate-600 sm:text-base">
+        <p>Campos previstos para guardar:</p>
+        <p class="rounded-2xl bg-slate-50 px-4 py-3 text-slate-700">{{ program.target_fields|join:", " }}</p>
+        <p>Datos previstos para el informe:</p>
+        <p class="rounded-2xl bg-slate-50 px-4 py-3 text-slate-700">{{ program.report_fields|join:", " }}</p>
+      </div>
+    </article>
+  </section>
+
+  {% if report %}
+    <section class="panel">
+      <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Informe de proceso</p>
+          <h2 class="mt-2 text-2xl font-bold text-tinta">{{ report.importacion.nombre_archivo }}</h2>
+          <p class="mt-3 text-sm leading-6 text-slate-600">
+            Estado actual: {{ report.importacion.estado }}.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <form method="post" hx-boost="false">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="discard">
+            <input type="hidden" name="import_id" value="{{ report.importacion.id }}">
+            <button class="action-button action-button-danger" type="submit">
+              Descartar importacion
+            </button>
+          </form>
+
+          {% if report.can_accept %}
+            <form method="post" hx-boost="false">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="accept">
+              <input type="hidden" name="import_id" value="{{ report.importacion.id }}">
+              <button class="action-button action-button-primary" type="submit">
+                Aceptar como valida
+              </button>
+            </form>
+          {% else %}
+            <button class="action-button action-button-secondary opacity-60" type="button" disabled>
+              Aceptar como valida
+            </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="mt-6 grid gap-3 sm:grid-cols-3">
+        <div class="panel-muted">
+          <span class="metric-card-label text-slate-500">Registros procesados</span>
+          <strong class="metric-card-value text-tinta">{{ report.importacion.total_registros }}</strong>
+        </div>
+        <div class="panel-muted">
+          <span class="metric-card-label text-slate-500">Correctos</span>
+          <strong class="metric-card-value text-tinta">{{ report.importacion.total_ok }}</strong>
+        </div>
+        <div class="panel-muted">
+          <span class="metric-card-label text-slate-500">Con error</span>
+          <strong class="metric-card-value text-tinta">{{ report.importacion.total_error }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-4 xl:grid-cols-2">
+      <article class="panel">
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Preparados para guardar</p>
+        <h2 class="mt-2 text-2xl font-bold text-tinta">Registros correctos</h2>
+
+        {% if report.ok_rows %}
+          <div class="mt-5 grid gap-3">
+            {% for row in report.ok_rows %}
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-rio">Linea {{ row.line_number }}</p>
+                <p class="mt-2 text-sm leading-6 text-slate-700"><strong>Datos:</strong> {{ row.values_preview }}</p>
+                <p class="mt-2 text-sm leading-6 text-slate-700"><strong>Informe:</strong> {{ row.report_preview }}</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600">{{ row.message }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state mt-5">
+            <strong>Aun no hay registros listos para guardar.</strong>
+          </div>
+        {% endif %}
+      </article>
+
+      <article class="panel">
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Errores detectados</p>
+        <h2 class="mt-2 text-2xl font-bold text-tinta">Registros observados</h2>
+
+        {% if report.error_rows %}
+          <div class="mt-5 grid gap-3">
+            {% for row in report.error_rows %}
+              <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-4">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-red-700">Linea {{ row.line_number }}</p>
+                <p class="mt-2 text-sm leading-6 text-red-700"><strong>Datos:</strong> {{ row.values_preview }}</p>
+                <p class="mt-2 text-sm leading-6 text-red-700"><strong>Informe:</strong> {{ row.report_preview }}</p>
+                <p class="mt-2 text-sm leading-6 text-red-700">{{ row.message }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state mt-5">
+            <strong>No se encontraron errores en este procesamiento.</strong>
+          </div>
+        {% endif %}
+      </article>
+    </section>
+  {% endif %}
+{% endblock %}

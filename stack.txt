@@ -1,0 +1,67 @@
+PROYECTO Y STACK TECNOLÓGICO
+
+Nombre del proyecto:
+Academico
+
+Descripción del proyecto:
+Academico es una aplicación web responsive orientada al control de asistencia escolar.
+Permitirá que varios profesores accedan a la lista de alumnos de un curso y sección, registren las ausencias durante el llamado y generen reportes de asistencia para seguimiento académico y administrativo.
+
+Objetivo general:
+Desarrollar una aplicación web responsive para gestionar la asistencia escolar de forma simple, rápida y segura, permitiendo registrar ausencias por curso y sección y generar reportes posteriores.
+
+Objetivos específicos:
+1. Permitir que los profesores accedan a sus listas de alumnos.
+2. Registrar ausencias durante el llamado.
+3. Generar reportes de asistencia.
+4. Importar alumnos, cursos y secciones desde archivos PDF.
+5. Administrar manualmente la información mediante pantallas ABM.
+6. Mantener una base modular y preparada para crecer.
+
+Enfoque de uso:
+La aplicación estará pensada principalmente para celulares, aunque también podrá usarse desde computadoras.
+La interfaz debe priorizar rapidez, claridad y facilidad de uso para docentes.
+
+Stack tecnológico:
+1. Python 3.12 O SUPERIOR
+   Lenguaje principal del backend.
+
+2. Django 5.1 o SUPERIOR
+   Framework principal para lógica de negocio, autenticación, ORM y estructura del sistema.
+
+3. PostgreSQL 16
+   Base de datos relacional para almacenar usuarios, alumnos, cursos, secciones, asistencias y auditoría.
+
+4. Tailwind CSS 3.4+ O SUPERIOR
+   Framework CSS para la interfaz responsive.
+
+5. HTMX 2
+   Para interacciones dinámicas sin necesidad de un frontend complejo.
+
+6. Alpine.js 3 O SUPERIOR
+   Para comportamientos ligeros del lado del cliente.
+
+7. django-pwa
+   Para soporte Progressive Web App y mejor experiencia en móviles.
+
+8. Gunicorn
+   Servidor de aplicación para Django en producción.
+
+9. Nginx
+   Proxy inverso y servidor de archivos estáticos.
+
+10. Docker + Docker Compose
+    Para estandarizar el entorno de desarrollo y despliegue.
+
+11. VPS Ubuntu 24.04
+    Entorno de producción.
+
+12. Visual Studio Code
+    Entorno principal de desarrollo.
+
+Criterios técnicos:
+1. Arquitectura modular.
+2. Código mantenible.
+3. Diseño responsive enfocada a dispositivos mobiles.
+4. Facilidad de despliegue.
+5. Preparado para escalabilidad futura.

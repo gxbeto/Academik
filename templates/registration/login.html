@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Academi-k | Login</title>
+    <meta name="description" content="Ingreso principal a Academi-k.">
+    <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+  </head>
+  <body>
+    <div class="mx-auto flex min-h-screen max-w-7xl items-center px-4 py-6 sm:px-6 lg:px-8">
+      <div class="grid w-full gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <section class="panel overflow-hidden">
+          <span class="chip-primary">Acceso principal</span>
+          <div class="mt-5 space-y-4">
+            <h1 class="max-w-3xl text-4xl font-black tracking-tight text-tinta sm:text-5xl">
+              Accede a las tareas diarias desde un solo lugar.
+            </h1>
+            <p class="max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+              Ingresa con tus credenciales para abrir el panel principal y acceder a cuentas,
+              cursos, asistencia, importaciones, comunicaciones y auditoria.
+            </p>
+          </div>
+
+          <div class="mt-8 grid gap-3 sm:grid-cols-2">
+            <div class="panel-muted">
+              <span class="metric-card-label text-slate-500">Acceso claro</span>
+              <strong class="metric-card-value text-tinta">Ingreso rapido al panel principal</strong>
+            </div>
+            <div class="panel-muted">
+              <span class="metric-card-label text-slate-500">Navegacion simple</span>
+              <strong class="metric-card-value text-tinta">Menu lateral en espanol</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="surface-rio">
+          <p class="text-sm uppercase tracking-[0.28em] text-white/70">Login</p>
+          <h2 class="mt-3 text-3xl font-black tracking-tight">Ingresar al panel</h2>
+          <p class="mt-4 max-w-xl text-sm leading-6 text-white/80">
+            Usa tus credenciales para comenzar a trabajar en Academi-k.
+          </p>
+
+          {% if form.errors %}
+            <div class="mt-6 rounded-3xl border border-white/20 bg-white/10 px-5 py-4 text-sm leading-6 text-white">
+              Revisa el usuario y la contrasena e intentalo de nuevo.
+            </div>
+          {% endif %}
+
+          <form class="mt-6 space-y-4" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next|default:'/' }}">
+
+            <div>
+              <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.28em] text-white/70" for="{{ form.username.id_for_label }}">
+                Usuario
+              </label>
+              <input
+                class="w-full rounded-2xl border border-white/15 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-mango"
+                id="{{ form.username.id_for_label }}"
+                name="{{ form.username.html_name }}"
+                type="text"
+                value="{{ form.username.value|default:'' }}"
+                autocomplete="username"
+                required>
+            </div>
+
+            <div>
+              <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.28em] text-white/70" for="{{ form.password.id_for_label }}">
+                Contrasena
+              </label>
+              <input
+                class="w-full rounded-2xl border border-white/15 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-mango"
+                id="{{ form.password.id_for_label }}"
+                name="{{ form.password.html_name }}"
+                type="password"
+                autocomplete="current-password"
+                required>
+            </div>
+
+            <button class="entity-shortcut w-full text-left" type="submit">
+              <span class="entity-shortcut-label">Entrar al sistema</span>
+              <span class="entity-shortcut-copy">Abre el panel principal para comenzar a trabajar.</span>
+            </button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

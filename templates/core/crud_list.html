@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Academi-k | {{ crud.title }}{% endblock %}
+
+{% block content %}
+  <section class="panel overflow-hidden">
+    <div class="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">{{ crud.section_title }}</p>
+        <h1 class="mt-3 text-4xl font-black tracking-tight text-tinta">{{ crud.title }}</h1>
+        <p class="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+          {{ crud.page_description }}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        {% if can_import %}
+          <a class="action-button action-button-secondary" href="{{ import_url }}">
+            Importar PDF
+          </a>
+        {% endif %}
+        {% if can_create %}
+          <a class="action-button action-button-primary" href="{{ create_url }}">
+            Nuevo registro
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rio">Listado general</p>
+        <h2 class="mt-2 text-2xl font-bold text-tinta">Registros cargados</h2>
+      </div>
+      <p class="text-sm text-slate-500">Toca una fila para abrirla y actualizar sus datos.</p>
+    </div>
+
+    {% if table.error %}
+      <div class="empty-state mt-5">
+        <strong>No pudimos cargar la informacion en este momento.</strong>
+        <p class="mt-2 text-sm leading-6 text-slate-600">
+          Intenta nuevamente en unos minutos. Si el problema continua, revisa la conexion o consulta con soporte.
+        </p>
+        <p class="mt-2 text-xs leading-5 text-slate-500">{{ table.error }}</p>
+      </div>
+    {% elif table.rows %}
+      <div class="table-wrap mt-5">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Eliminar</th>
+              {% for header in table.headers %}
+                <th>{{ header }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in table.rows %}
+              <tr
+                class="table-row-link"
+                data-href="{{ row.edit_url }}"
+                tabindex="0"
+                onclick="window.location=this.dataset.href;"
+                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location=this.dataset.href; }">
+                <td class="table-action-cell" onclick="event.stopPropagation();">
+                  <form
+                    method="post"
+                    action="{{ row.delete_url }}"
+                    hx-boost="false"
+                    onsubmit="event.stopPropagation(); return confirm('{{ row.delete_confirm|escapejs }}');">
+                    {% csrf_token %}
+                    <button class="action-button action-button-danger action-button-small" type="submit">
+                      Eliminar
+                    </button>
+                  </form>
+                </td>
+                {% for cell in row.cells %}
+                  <td>{{ cell }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state mt-5">
+        <strong>{{ crud.empty_message }}</strong>
+        {% if can_create %}
+          <p class="mt-2 text-sm leading-6 text-slate-600">
+            Usa el boton superior para registrar el primer dato en esta seccion.
+          </p>
+        {% else %}
+          <p class="mt-2 text-sm leading-6 text-slate-600">
+            Cuando haya informacion disponible para tu perfil, la veras listada en esta pantalla.
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

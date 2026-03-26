@@ -1,0 +1,28 @@
+{
+  "name": "academik",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Academik - control de asistencia escolar con Django, HTMX y Tailwind CSS",
+  "scripts": {
+    "build": "npm run setup",
+    "vendor:sync": "node ./scripts/sync-vendor.mjs",
+    "tailwind:build": "tailwindcss -i ./static/src/styles.css -o ./static/dist/styles.css",
+    "tailwind:watch": "tailwindcss -i ./static/src/styles.css -o ./static/dist/styles.css --watch",
+    "setup": "npm run vendor:sync && npm run tailwind:build"
+  },
+  "keywords": [
+    "django",
+    "academik",
+    "tailwindcss",
+    "htmx",
+    "alpinejs"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "3.4"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.8",
+    "htmx.org": "^2.0.8"
+  }
+}
