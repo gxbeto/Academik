@@ -244,6 +244,24 @@ class CrudWorkflowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Ayuda rapida")
         self.assertContains(response, "tooltip-badge")
+        self.assertContains(response, 'class="crud-inline-field"', html=False)
+        self.assertContains(response, 'class="crud-inline-field-label"', html=False)
+        self.assertContains(response, 'class="crud-inline-field-control"', html=False)
+
+    def test_boolean_fields_render_as_toggle_switches(self):
+        response = self.client.get(reverse("crud-entidad-nuevo", kwargs={"entity_key": "roles"}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class="crud-inline-field toggle-field"', html=False)
+        self.assertContains(response, 'class="crud-inline-field-label"', html=False)
+        self.assertContains(
+            response,
+            'class="crud-inline-field-control crud-inline-field-control-toggle"',
+            html=False,
+        )
+        self.assertContains(response, 'class="toggle-switch-input"', html=False)
+        self.assertContains(response, 'class="toggle-switch-track"', html=False)
+        self.assertContains(response, 'role="switch"', html=False)
 
     def test_admin_only_sees_import_button_for_professors_and_students(self):
         profesores_response = self.client.get(

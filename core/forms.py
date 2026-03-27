@@ -14,7 +14,7 @@ FIELD_INPUT_CLASS = (
     "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 "
     "outline-none transition focus:border-rio focus:ring-0"
 )
-FIELD_CHECKBOX_CLASS = "h-5 w-5 rounded border-slate-300 text-rio focus:ring-rio"
+FIELD_CHECKBOX_CLASS = "toggle-switch-input"
 FIELD_TOOLTIP_EXAMPLES = {
     "username": (
         "Ingresa el nombre de usuario que la persona usara para acceder.",
@@ -129,6 +129,7 @@ class PortalFormStylingMixin:
 
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs["class"] = FIELD_CHECKBOX_CLASS
+                field.widget.attrs["role"] = "switch"
             else:
                 field.widget.attrs["class"] = FIELD_INPUT_CLASS
 

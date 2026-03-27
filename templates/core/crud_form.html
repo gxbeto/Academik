@@ -35,7 +35,7 @@
         {% endif %}
       </p>
 
-      <form class="mt-6 space-y-4" method="post" hx-boost="false">
+      <form class="mt-6 space-y-0" method="post" hx-boost="false">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -48,39 +48,44 @@
 
         {% for field in form %}
           {% if field.field.widget.input_type == "checkbox" %}
-            <label class="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-              {{ field }}
-              <span class="block">
-                <span class="block text-sm font-semibold text-tinta">
-                  {{ field.label }}
-                  {% if field.field.widget.attrs.title %}
-                    <span class="tooltip-badge" title="{{ field.field.widget.attrs.title }}">?</span>
-                  {% endif %}
+            <label class="crud-inline-field toggle-field">
+              <span class="crud-inline-field-label">
+                {{ field.label }}
+                {% if field.field.widget.attrs.title %}
+                  <span class="tooltip-badge" title="{{ field.field.widget.attrs.title }}">?</span>
+                {% endif %}
+              </span>
+              <span class="crud-inline-field-control crud-inline-field-control-toggle">
+                <span class="toggle-switch-control">
+                  {{ field }}
+                  <span class="toggle-switch-track" aria-hidden="true"></span>
                 </span>
                 {% if field.help_text %}
-                  <span class="mt-1 block text-xs leading-5 text-slate-500">{{ field.help_text }}</span>
+                  <span class="mt-2 block text-xs leading-5 text-slate-500">{{ field.help_text }}</span>
                 {% endif %}
                 {% for error in field.errors %}
-                  <span class="mt-1 block text-xs leading-5 text-red-600">{{ error }}</span>
+                  <span class="mt-2 block text-xs leading-5 text-red-600">{{ error }}</span>
                 {% endfor %}
               </span>
             </label>
             {% else %}
-              <div>
-                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-rio" for="{{ field.id_for_label }}">
+              <div class="crud-inline-field">
+                <label class="crud-inline-field-label" for="{{ field.id_for_label }}">
                   {{ field.label }}
                   {% if field.field.widget.attrs.title %}
                     <span class="tooltip-badge" title="{{ field.field.widget.attrs.title }}">?</span>
                   {% endif %}
                 </label>
-                {{ field }}
-                {% if field.help_text %}
-                <p class="mt-2 text-xs leading-5 text-slate-500">{{ field.help_text }}</p>
-              {% endif %}
-              {% for error in field.errors %}
-                <p class="mt-2 text-xs leading-5 text-red-600">{{ error }}</p>
-              {% endfor %}
-            </div>
+                <div class="crud-inline-field-control">
+                  {{ field }}
+                  {% if field.help_text %}
+                    <p class="mt-2 text-xs leading-5 text-slate-500">{{ field.help_text }}</p>
+                  {% endif %}
+                  {% for error in field.errors %}
+                    <p class="mt-2 text-xs leading-5 text-red-600">{{ error }}</p>
+                  {% endfor %}
+                </div>
+              </div>
           {% endif %}
         {% endfor %}
 

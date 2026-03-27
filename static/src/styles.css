@@ -43,6 +43,18 @@
   }
 }
 
+.toggle-switch-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 @layer components {
   .panel {
     @apply rounded-3xl border border-white/70 bg-white/85 p-6 shadow-suave backdrop-blur;
@@ -299,6 +311,75 @@
     @apply overflow-x-auto rounded-3xl border border-slate-200/80;
   }
 
+  .toggle-field {
+    @apply flex items-start gap-3 py-1;
+  }
+
+  .crud-inline-field {
+    /* @apply grid items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/75 px-4 py-3; */
+    @apply grid items-start gap-3 px-4 py-1.5;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crud-inline-field-label {
+    @apply text-xs font-semibold uppercase tracking-[0.24em] text-rio;
+  }
+
+  .crud-inline-field-control {
+    @apply min-w-0;
+  }
+
+  .crud-inline-field-control-toggle {
+    @apply flex items-center;
+  }
+
+  .toggle-field {
+    @apply items-start;
+  }
+
+  .toggle-switch-control {
+    @apply relative inline-flex shrink-0 items-center;
+  }
+
+  .toggle-switch-track {
+    @apply pointer-events-none relative inline-flex h-7 w-12 rounded-full bg-slate-300 transition duration-200 ease-out;
+  }
+
+  .toggle-switch-track::after {
+    content: "";
+    @apply absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow-sm transition duration-200 ease-out;
+  }
+
+  .toggle-switch-input:checked+.toggle-switch-track {
+    @apply bg-rio;
+  }
+
+  .toggle-switch-input:checked+.toggle-switch-track::after {
+    transform: translateX(1.25rem);
+  }
+
+  .toggle-switch-input:focus-visible+.toggle-switch-track {
+    box-shadow: 0 0 0 3px rgb(17 75 95 / 0.25);
+  }
+
+  .toggle-switch-input:disabled+.toggle-switch-track {
+    @apply opacity-50;
+  }
+
+  @media (min-width: 640px) {
+    .crud-inline-field {
+      grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr);
+    }
+
+    .crud-inline-field-label {
+      padding-top: 0.5rem;
+    }
+
+    .crud-inline-field-control-toggle {
+      min-height: 2.875rem;
+    }
+  }
+
   .data-table {
     @apply min-w-full divide-y divide-slate-200 text-left text-sm;
   }
@@ -379,6 +460,22 @@
 
   html.theme-dark .entity-shortcut {
     @apply border-slate-800 bg-slate-900/90 hover:border-slate-600 hover:bg-slate-800;
+  }
+
+  html.theme-dark .crud-inline-field {
+    @apply border-slate-700 bg-slate-900/80;
+  }
+
+  html.theme-dark .toggle-switch-track {
+    @apply bg-slate-700;
+  }
+
+  html.theme-dark .toggle-switch-input:checked+.toggle-switch-track {
+    @apply bg-sky-400;
+  }
+
+  html.theme-dark .toggle-switch-input:focus-visible+.toggle-switch-track {
+    box-shadow: 0 0 0 3px rgb(56 189 248 / 0.3);
   }
 
   html.theme-dark .action-button-secondary,

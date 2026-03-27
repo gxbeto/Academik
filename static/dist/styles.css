@@ -1278,6 +1278,125 @@ html.theme-dark .entity-shortcut-copy {
   border-color: rgb(226 232 240 / 0.8);
 }
 
+.toggle-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.crud-inline-field {
+  /* @apply grid items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/75 px-4 py-3; */
+  display: grid;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.crud-inline-field-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  --tw-text-opacity: 1;
+  color: rgb(17 75 95 / var(--tw-text-opacity, 1));
+}
+
+.crud-inline-field-control {
+  min-width: 0px;
+}
+
+.crud-inline-field-control-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-field {
+  align-items: flex-start;
+}
+
+.toggle-switch-control {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.toggle-switch-track {
+  pointer-events: none;
+  position: relative;
+  display: inline-flex;
+  height: 1.75rem;
+  width: 3rem;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.toggle-switch-track::after {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.25rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.toggle-switch-input:checked+.toggle-switch-track {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 75 95 / var(--tw-bg-opacity, 1));
+}
+
+.toggle-switch-input:checked+.toggle-switch-track::after {
+  transform: translateX(1.25rem);
+}
+
+.toggle-switch-input:focus-visible+.toggle-switch-track {
+  box-shadow: 0 0 0 3px rgb(17 75 95 / 0.25);
+}
+
+.toggle-switch-input:disabled+.toggle-switch-track {
+  opacity: 0.5;
+}
+
+@media (min-width: 640px) {
+  .crud-inline-field {
+    grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr);
+  }
+
+  .crud-inline-field-label {
+    padding-top: 0.5rem;
+  }
+
+  .crud-inline-field-control-toggle {
+    min-height: 2.875rem;
+  }
+}
+
 .data-table {
   min-width: 100%;
 }
@@ -1476,6 +1595,26 @@ html.theme-dark .entity-shortcut:hover {
   background-color: rgb(30 41 59 / var(--tw-bg-opacity, 1));
 }
 
+html.theme-dark .crud-inline-field {
+  --tw-border-opacity: 1;
+  border-color: rgb(51 65 85 / var(--tw-border-opacity, 1));
+  background-color: rgb(15 23 42 / 0.8);
+}
+
+html.theme-dark .toggle-switch-track {
+  --tw-bg-opacity: 1;
+  background-color: rgb(51 65 85 / var(--tw-bg-opacity, 1));
+}
+
+html.theme-dark .toggle-switch-input:checked+.toggle-switch-track {
+  --tw-bg-opacity: 1;
+  background-color: rgb(56 189 248 / var(--tw-bg-opacity, 1));
+}
+
+html.theme-dark .toggle-switch-input:focus-visible+.toggle-switch-track {
+  box-shadow: 0 0 0 3px rgb(56 189 248 / 0.3);
+}
+
 html.theme-dark .action-button-secondary,
   html.theme-dark .icon-button-soft {
   --tw-border-opacity: 1;
@@ -1569,10 +1708,6 @@ html.theme-dark .text-slate-500 {
   margin-bottom: 0.5rem;
 }
 
-.mt-1 {
-  margin-top: 0.25rem;
-}
-
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -1659,10 +1794,6 @@ html.theme-dark .text-slate-500 {
   flex-wrap: wrap;
 }
 
-.items-start {
-  align-items: flex-start;
-}
-
 .items-center {
   align-items: center;
 }
@@ -1689,6 +1820,12 @@ html.theme-dark .text-slate-500 {
 
 .gap-8 {
   gap: 2rem;
+}
+
+.space-y-0 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0px * var(--tw-space-y-reverse));
 }
 
 .space-y-1\.5 > :not([hidden]) ~ :not([hidden]) {
@@ -1867,6 +2004,10 @@ html.theme-dark .text-slate-500 {
   text-transform: uppercase;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .leading-5 {
   line-height: 1.25rem;
 }
@@ -1961,6 +2102,10 @@ html.theme-dark .text-slate-500 {
   outline-offset: 2px;
 }
 
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1969,9 +2114,32 @@ html.theme-dark .text-slate-500 {
   transition-duration: 150ms;
 }
 
+.toggle-switch-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .focus\:border-mango:focus {
   --tw-border-opacity: 1;
   border-color: rgb(247 178 103 / var(--tw-border-opacity, 1));
+}
+
+.focus\:border-rio:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(17 75 95 / var(--tw-border-opacity, 1));
+}
+
+.focus\:ring-0:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
 @media (min-width: 640px) {
